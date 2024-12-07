@@ -4,9 +4,6 @@ const parse = (lines: string[]): [number[], number[]] => {
   var left: number[] = [];
   var right: number[] = [];
   for (var line of lines) {
-    if (line == "") {
-      continue;
-    }
     const nums = line.split("   ").map((num) => {
       return parseInt(num);
     });
