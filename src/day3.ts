@@ -1,6 +1,11 @@
 import { SolveFunc } from "./types";
 
-export const problem1: SolveFunc = (lines: string[]) => {
+const parse = (input: string): string[] => {
+  return input.split("\n").filter((line) => line.length > 0);
+};
+
+export const problem1: SolveFunc = (input: string) => {
+  const lines = parse(input);
   const re = /mul\(\d+\,\d+\)/g;
   let ans = 0;
   for (var line of lines) {
@@ -17,7 +22,8 @@ export const problem1: SolveFunc = (lines: string[]) => {
   return ans;
 };
 
-export const problem2: SolveFunc = (lines: string[]) => {
+export const problem2: SolveFunc = (input: string) => {
+  const lines = parse(input);
   const re = /mul\(\d+\,\d+\)|do\(\)|don't\(\)/g;
   let ans = 0;
   let active = true;

@@ -1,15 +1,15 @@
 import { SolveFunc } from "./types";
 
-const parse = (lines: string[]): number[][] => {
-  return lines.map((line) => {
+const parse = (input: string): number[][] => {
+  return input.split("\n").filter((line) => line.length > 0).map((line) => {
     return line.split(" ").map((num) => {
       return parseInt(num);
     });
   });
 };
 
-export const problem1: SolveFunc = (lines: string[]) => {
-  const rows = parse(lines);
+export const problem1: SolveFunc = (input: string) => {
+  const rows = parse(input);
   let ans = 0;
   for (var i = 0; i < rows.length; i++) {
     if (validRow(rows[i])) ans++;
@@ -37,8 +37,8 @@ const validRow = (row: number[]) => {
   return isValid;
 };
 
-export const problem2: SolveFunc = (lines: string[]) => {
-  const rows = parse(lines);
+export const problem2: SolveFunc = (input: string) => {
+  const rows = parse(input);
   let ans = 0;
   for (var i = 0; i < rows.length; i++) {
     for (var j = 0; j < rows[i].length; j++) {

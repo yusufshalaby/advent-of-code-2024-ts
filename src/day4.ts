@@ -1,6 +1,11 @@
 import { SolveFunc } from "./types";
 
-export const problem1: SolveFunc = (lines: string[]) => {
+const parse = (input: string): string[] => {
+  return input.split("\n").filter((line) => line.length > 0);
+};
+
+export const problem1: SolveFunc = (input: string) => {
+  const lines = parse(input);
   const WORD = "XMAS";
   let ans = 0;
   for (var i = 0; i < lines.length; i++) {
@@ -40,7 +45,8 @@ export const problem1: SolveFunc = (lines: string[]) => {
   return ans;
 };
 
-export const problem2: SolveFunc = (lines: string[]) => {
+export const problem2: SolveFunc = (input: string) => {
+  const lines = parse(input);
   let ans = 0;
   for (var i = 0; i < lines.length; i++) {
     for (var j = 0; j < lines[i].length; j++) {

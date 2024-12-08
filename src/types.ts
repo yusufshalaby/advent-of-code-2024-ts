@@ -1,5 +1,5 @@
 export interface SolveFunc {
-  (lines: string[]): string | number;
+  (input: string): string | number;
 }
 
 export interface DaySolver {

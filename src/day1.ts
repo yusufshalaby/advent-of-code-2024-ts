@@ -1,6 +1,7 @@
 import { SolveFunc } from "./types";
 
-const parse = (lines: string[]): [number[], number[]] => {
+const parse = (input: string): [number[], number[]] => {
+  const lines = input.split("\n").filter((line) => line.length > 0);
   var left: number[] = [];
   var right: number[] = [];
   for (var line of lines) {
@@ -13,8 +14,8 @@ const parse = (lines: string[]): [number[], number[]] => {
   return [left, right];
 };
 
-export const problem1: SolveFunc = (lines: string[]) => {
-  let [left, right] = parse(lines);
+export const problem1: SolveFunc = (input: string) => {
+  let [left, right] = parse(input);
   left.sort();
   right.sort();
 
@@ -25,8 +26,8 @@ export const problem1: SolveFunc = (lines: string[]) => {
   );
 };
 
-export const problem2: SolveFunc = (lines: string[]) => {
-  let [left, right] = parse(lines);
+export const problem2: SolveFunc = (input: string) => {
+  let [left, right] = parse(input);
   let counter = new Map<number, number>();
 
   for (var value of right) {
