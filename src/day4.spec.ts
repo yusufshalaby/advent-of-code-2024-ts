@@ -1,6 +1,6 @@
 import { problem1, problem2 } from "./day4";
 
-export const testInput = `MMMSXXMASM"
+export const testInput = `MMMSXXMASM
 MSAMXMSMSA
 AMXSXMAAMM
 MSAMASMSMX
