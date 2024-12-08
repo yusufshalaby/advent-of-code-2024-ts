@@ -24,7 +24,6 @@ export const problem2: SolveFunc = (lines: string[]) => {
   for (var line of lines) {
     let matches = line.match(re);
     if (!matches) continue;
-    console.log(matches);
     for (var match of matches) {
       switch (match) {
         case "do()": {
@@ -38,7 +37,6 @@ export const problem2: SolveFunc = (lines: string[]) => {
         default: {
           if (active) {
             const trimmed = match.substring(4, match.length - 1);
-            console.log(trimmed);
             ans += trimmed.split(",").map((ele) => parseInt(ele)).reduce(
               (accumulator, currentValue) => accumulator * currentValue,
               1,
