@@ -157,20 +157,21 @@ const movePart2ElectricBoogaloo = (
   problem2answer: Problem2Answer,
 ): boolean => {
   let next = nextPos(dir, pos);
+  visited.addDirection(pos, dir);
   while (
     !tupInArray(next, obstructions)
   ) {
     [pos[0], pos[1]] = next;
     next = nextPos(dir, pos);
     visited.addDirection(pos, dir);
-    let newloops = checkForLoop(
-      nextDir(dir),
+    let newloop = checkForLoop(
+      dir,
       [pos[0], pos[1]],
       obstructions,
       visited,
       bounds,
     );
-    problem2answer.loops += newloops;
+    problem2answer.loops += newloop;
     //if (newloops > 0) console.log(next);
     if (!inBounds(dir, next, bounds)) return false;
   }
@@ -184,6 +185,7 @@ const checkForLoop = (
   visited: Visited,
   bounds: [number, number],
 ) => {
+  dir = nextDir(dir);
   let next = nextPos(dir, pos);
   while (
     !tupInArray(next, obstructions) && inBounds(dir, next, bounds)
@@ -227,9 +229,7 @@ export const problem2: SolveFunc = (input: string) => {
       parsedInput.bounds,
       loops,
     )
-  ) {
-    dir = nextDir(dir);
-  }
+  ) dir = nextDir(dir);
   //return Array.from(visited.keys()).length;
   return loops.loops;
 };
