@@ -144,15 +144,19 @@ class Visited extends Map<string, Set<Direction>> {
   }
 }
 
+type Problem2Answer = {
+  loops: number;
+};
+
 const movePart2ElectricBoogaloo = (
   dir: Direction,
   pos: [number, number],
   obstructions: [number, number][],
   visited: Visited,
   bounds: [number, number],
-): [boolean, number] => {
+  problem2answer: Problem2Answer,
+): boolean => {
   let next = nextPos(dir, pos);
-  let loopsFound = 0;
   while (
     !tupInArray(next, obstructions)
   ) {
@@ -166,11 +170,11 @@ const movePart2ElectricBoogaloo = (
       visited,
       bounds,
     );
-    loopsFound += newloops;
-    if (newloops > 0) console.log(next);
-    if (!inBounds(dir, next, bounds)) return [false, loopsFound];
+    problem2answer.loops += newloops;
+    //if (newloops > 0) console.log(next);
+    if (!inBounds(dir, next, bounds)) return false;
   }
-  return [true, loopsFound];
+  return true;
 };
 
 const checkForLoop = (
@@ -212,26 +216,20 @@ export const problem1: SolveFunc = (input: string) => {
 export const problem2: SolveFunc = (input: string) => {
   const parsedInput = parse(input);
   let visited = new Visited();
-  let loops = 0;
+  let loops: Problem2Answer = { loops: 0 };
   let dir = Direction.up;
-  let moveOutput = movePart2ElectricBoogaloo(
-    dir,
-    parsedInput.startPos,
-    parsedInput.obstructions,
-    visited,
-    parsedInput.bounds,
-  );
-  while (moveOutput[0]) {
-    dir = nextDir(dir);
-    moveOutput = movePart2ElectricBoogaloo(
+  while (
+    movePart2ElectricBoogaloo(
       dir,
       parsedInput.startPos,
       parsedInput.obstructions,
       visited,
       parsedInput.bounds,
-    );
-    loops += moveOutput[1];
+      loops,
+    )
+  ) {
+    dir = nextDir(dir);
   }
   //return Array.from(visited.keys()).length;
-  return loops;
+  return loops.loops;
 };
