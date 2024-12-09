@@ -17,6 +17,6 @@ describe("On Day 6", () => {
   });
 
   it(`part2`, () => {
-    expect(problem2(testInput)).toBe(0);
+    expect(problem2(testInput)).toBe(6);
   });
 });

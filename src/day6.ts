@@ -107,13 +107,8 @@ const move = (
   bounds: [number, number],
 ): boolean => {
   let next = nextPos(dir, pos);
-  if (
-    !tupInArray(pos, visited)
-  ) {
-    visited.push([pos[0], pos[1]]);
-  }
   while (
-    !tupInArray(next, obstructions) && inBounds(dir, next, bounds)
+    !tupInArray(next, obstructions)
   ) {
     [pos[0], pos[1]] = next;
     next = nextPos(dir, pos);
@@ -122,15 +117,86 @@ const move = (
     ) {
       visited.push([pos[0], pos[1]]);
     }
+    if (!inBounds(dir, next, bounds)) return false;
   }
-  return inBounds(dir, next, bounds);
+  return true;
+};
+
+class Visited extends Map<string, Set<Direction>> {
+  hasPos(pos: [number, number]) {
+    return this.has(`${pos[0]},${pos[1]}`);
+  }
+  addDirection(pos: [number, number], direction: Direction) {
+    // Check if the key already exists
+    if (this.hasPos(pos)) {
+      // Key exists, append to the existing Set
+      this.get(`${pos[0]},${pos[1]}`)!.add(direction);
+    } else {
+      // Key doesn't exist, create a new Set and add the direction
+      this.set(`${pos[0]},${pos[1]}`, new Set([direction]));
+    }
+  }
+  checkDirection(pos: [number, number], direction: Direction) {
+    if (this.hasPos(pos)) {
+      return this.get(`${pos[0]},${pos[1]}`)!.has(direction);
+    }
+    return false;
+  }
+}
+
+const movePart2ElectricBoogaloo = (
+  dir: Direction,
+  pos: [number, number],
+  obstructions: [number, number][],
+  visited: Visited,
+  bounds: [number, number],
+): [boolean, number] => {
+  let next = nextPos(dir, pos);
+  let loopsFound = 0;
+  while (
+    !tupInArray(next, obstructions)
+  ) {
+    [pos[0], pos[1]] = next;
+    next = nextPos(dir, pos);
+    visited.addDirection(pos, dir);
+    let newloops = checkForLoop(
+      nextDir(dir),
+      [pos[0], pos[1]],
+      obstructions,
+      visited,
+      bounds,
+    );
+    loopsFound += newloops;
+    if (newloops > 0) console.log(next);
+    if (!inBounds(dir, next, bounds)) return [false, loopsFound];
+  }
+  return [true, loopsFound];
+};
+
+const checkForLoop = (
+  dir: Direction,
+  pos: [number, number],
+  obstructions: [number, number][],
+  visited: Visited,
+  bounds: [number, number],
+) => {
+  let next = nextPos(dir, pos);
+  while (
+    !tupInArray(next, obstructions) && inBounds(dir, next, bounds)
+  ) {
+    [pos[0], pos[1]] = next;
+    next = nextPos(dir, pos);
+    if (visited.checkDirection(pos, dir)) {
+      return 1;
+    }
+  }
+  return 0;
 };
 
 export const problem1: SolveFunc = (input: string) => {
   const parsedInput = parse(input);
   let visited: [number, number][] = [];
   let dir = Direction.up;
-  console.log(parsedInput);
   while (
     move(
       dir,
@@ -139,15 +205,33 @@ export const problem1: SolveFunc = (input: string) => {
       visited,
       parsedInput.bounds,
     )
-  ) {
-    dir = nextDir(dir);
-    //console.log(parsedInput.startPos);
-    //console.log(dir);
-    //console.log(visited);
-  }
+  ) dir = nextDir(dir);
   return visited.length;
 };
 
 export const problem2: SolveFunc = (input: string) => {
-  return 0;
+  const parsedInput = parse(input);
+  let visited = new Visited();
+  let loops = 0;
+  let dir = Direction.up;
+  let moveOutput = movePart2ElectricBoogaloo(
+    dir,
+    parsedInput.startPos,
+    parsedInput.obstructions,
+    visited,
+    parsedInput.bounds,
+  );
+  while (moveOutput[0]) {
+    dir = nextDir(dir);
+    moveOutput = movePart2ElectricBoogaloo(
+      dir,
+      parsedInput.startPos,
+      parsedInput.obstructions,
+      visited,
+      parsedInput.bounds,
+    );
+    loops += moveOutput[1];
+  }
+  //return Array.from(visited.keys()).length;
+  return loops;
 };
